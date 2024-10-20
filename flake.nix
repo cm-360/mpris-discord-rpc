@@ -1,16 +1,18 @@
 {
   description = "MPRIS2 Discord music rich presence status with support for album covers and progress bar.";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-  outputs = { self, nixpkgs }: {
-    packages.x86_64-linux =
-      let
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-        };
-      in {
-        mpris-discord-rpc = pkgs.callPackage ./package.nix {};
-      };
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
   };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        packages = {
+          mpris-discord-rpc = pkgs.callPackage ./package.nix {};
+        };
+      });
 }

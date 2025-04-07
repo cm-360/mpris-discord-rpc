@@ -13,6 +13,10 @@ use crate::debug_log;
 #[derive(Parser, ClapSerde, Serialize, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
+    /// Your Last.fm API key
+    #[arg(long, value_name = "key", value_parser = clap::value_parser!(String))]
+    pub lastfm_api_key: Option<String>,
+
     /// Activity refresh rate (min 5, default 10)
     #[arg(short, long, value_name = "seconds", value_parser = clap::value_parser!(u64).range(5..))]
     pub interval: Option<u64>,
@@ -113,6 +117,10 @@ fn create_config_file(home_dir: &PathBuf, force: bool) -> (bool, PathBuf) {
 # mpris-discord-rpc --reset-config
 # Or you can manually copy the example config from repo:
 # https://github.com/patryk-ku/mpris-discord-rpc/blob/main/config.yaml
+
+# Last.fm API key
+# You can easily get it from: https://www.last.fm/pl/api
+lastfm_api_key: key-here
 
 # Activity refresh rate in seconds (min 5)
 interval: 10
@@ -229,6 +237,10 @@ pub fn load_settings() -> Cli {
     debug_log!(args.debug_log, "config: {:#?}", config);
 
     // Logic of merging config with args
+    if args.lastfm_api_key != config.lastfm_api_key && args.lastfm_api_key.is_some() {
+        config.lastfm_api_key = args.lastfm_api_key;
+    }
+
     if args.interval != config.interval && args.interval.is_some() {
         config.interval = args.interval;
     }

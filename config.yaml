@@ -5,6 +5,10 @@
 # Or you can manually copy the example config from repo:
 # https://github.com/patryk-ku/mpris-discord-rpc/blob/main/config.yaml
 
+# Last.fm API key
+# You can easily get it from: https://www.last.fm/pl/api
+lastfm_api_key: key-here
+
 # Activity refresh rate in seconds (min 5)
 interval: 10
 
